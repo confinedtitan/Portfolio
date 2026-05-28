@@ -55,7 +55,7 @@ export default function Hero() {
               <span className="animate-pulse inline-block">👋</span>
             </motion.h1>
 
-            <motion.div variants={fadeIn('up')} className="text-2xl sm:text-3xl font-heading font-semibold mb-6 h-12">
+            <motion.div variants={fadeIn('up')} className="text-2xl sm:text-3xl font-heading font-semibold mb-6 h-auto min-h-[4rem] sm:min-h-[3rem]">
               <TypeAnimation
                 sequence={[
                   'Full Stack Developer',

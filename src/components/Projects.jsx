@@ -120,7 +120,7 @@ export default function Projects() {
           initial={{ opacity: 0, y: 15 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex items-center justify-center gap-3 mb-12"
+          className="flex flex-wrap items-center justify-center gap-3 mb-12"
         >
           {filters.map((f) => (
             <button

@@ -1,7 +1,18 @@
 import { motion } from 'framer-motion';
 import { staggerContainer, fadeIn, scaleIn } from '../utils/motion';
 import { useRef } from 'react';
-import profileImg from '../assets/profile.jpg';
+import Stack from './Stack';
+import photo1 from '../assets/photo1.jpeg';
+import photo2 from '../assets/photo2.JPG';
+import photo3 from '../assets/photo3.JPG';
+import photo4 from '../assets/photo4.JPG';
+
+const stackImages = [
+  photo1,
+  photo2,
+  photo3,
+  photo4
+];
 
 const stats = [
   { number: '4+', label: 'Hackathon Teams Led' },
@@ -39,26 +50,36 @@ export default function About() {
           viewport={{ once: true, amount: 0.2 }}
           className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"
         >
-          {/* Left — Profile Image */}
+          {/* Left — Profile Image Stack */}
           <motion.div
             variants={fadeIn('right', 0.3)}
-            className="flex justify-center lg:justify-end"
+            className="flex justify-center lg:justify-center"
           >
             <div className="relative">
-              {/* Gradient border wrapper */}
-              <div className="p-[2px] bg-gradient-to-br from-cyan-400 to-purple-500 rounded-2xl"
-                style={{ boxShadow: '0 0 30px rgba(6,182,212,0.25)' }}>
-                <div className="rounded-2xl overflow-hidden w-72 h-80 sm:w-80 sm:h-96">
-                  <img
-                    src={profileImg}
-                    alt="R Shamganesh"
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <div className="w-[320px] h-96 sm:w-[480px] sm:h-[450px]" style={{ perspective: 1000 }}>
+                <Stack
+                  randomRotation={true}
+                  sensitivity={180}
+                  sendToBackOnClick={true}
+                  cards={stackImages.map((src, i) => (
+                    <div  
+                      key={i} 
+                      className="w-full h-full p-[2px] bg-gradient-to-br from-cyan-400 to-purple-500 rounded-2xl"
+                      style={{ boxShadow: '0 0 30px rgba(6,182,212,0.25)' }}
+                    >
+                      <div className="w-full h-full rounded-[14px] overflow-hidden bg-black">
+                        <img 
+                          src={src} 
+                          alt={`Activity ${i + 1}`} 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  autoplay
+                  autoplayDelay={3500}
+                />
               </div>
-              {/* Floating badge */}
-              
             </div>
           </motion.div>
 

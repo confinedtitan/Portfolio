@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { staggerContainer, fadeIn, scaleIn } from '../utils/motion';
+import { staggerContainer, fadeIn, scaleIn } from '../utils/Motion';
 import { useRef } from 'react';
 import Stack from './Stack';
 import photo1 from '../assets/photo1.WebP';
@@ -43,7 +43,7 @@ export default function About() {
           <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 mx-auto mt-4 rounded-full" />
         </motion.div>
 
-        <motion.div 
+        <motion.div
           variants={staggerContainer(0.2, 0.2)}
           initial="hidden"
           whileInView="show"
@@ -62,16 +62,16 @@ export default function About() {
                   sensitivity={180}
                   sendToBackOnClick={true}
                   cards={stackImages.map((src, i) => (
-                    <div  
-                      key={i} 
+                    <div
+                      key={i}
                       className="w-full h-full p-[2px] bg-gradient-to-br from-cyan-400 to-purple-500 rounded-2xl"
                       style={{ boxShadow: '0 0 30px rgba(6,182,212,0.25)' }}
                     >
                       <div className="w-full h-full rounded-[14px] overflow-hidden bg-black">
-                        <img 
-                          src={src} 
-                          alt={`Activity ${i + 1}`} 
-                          className="w-full h-full object-cover" 
+                        <img
+                          src={src}
+                          alt={`Activity ${i + 1}`}
+                          className="w-full h-full object-cover"
                         />
                       </div>
                     </div>
@@ -102,7 +102,7 @@ export default function About() {
               input engine I built from scratch, zero dependencies and various other small scale projects
             </p>
 
-            <motion.div 
+            <motion.div
               variants={staggerContainer(0.1, 0.5)}
               initial="hidden"
               whileInView="show"

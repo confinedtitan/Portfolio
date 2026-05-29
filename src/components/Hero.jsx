@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { staggerContainer, fadeIn, scaleIn } from '../utils/motion';
+import { staggerContainer, fadeIn, scaleIn } from '../utils/Motion';
 import { TypeAnimation } from 'react-type-animation';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import profileImg from '../assets/profile.jpg';

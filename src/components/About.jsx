@@ -58,7 +58,7 @@ export default function About() {
             <div className="relative">
               <div className="w-[320px] h-96 sm:w-[480px] sm:h-[450px]" style={{ perspective: 1000 }}>
                 <Stack
-                  randomRotation={true}
+                  randomRotation={false}
                   sensitivity={180}
                   sendToBackOnClick={true}
                   cards={stackImages.map((src, i) => (

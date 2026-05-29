@@ -85,13 +85,13 @@ export default function App() {
       <div className="fixed inset-0 z-[-1]">
         <LiquidEther
           colors={[ '#5227FF', '#FF9FFC', '#B497CF' ]}
-          mouseForce={20}
-          cursorSize={100}
+          mouseForce={15}
+          cursorSize={80}
           isViscous={false}
           viscous={30}
-          iterationsViscous={32}
-          iterationsPoisson={32}
-          resolution={0.5}
+          iterationsViscous={16}
+          iterationsPoisson={16}
+          resolution={0.25}
           isBounce={false}
           autoDemo={true}
           autoSpeed={0.5}

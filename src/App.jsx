@@ -4,6 +4,7 @@ import { HiArrowUp } from 'react-icons/hi';
 
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import LiquidEther from './components/LiquidEther';
 
 const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));
@@ -80,7 +81,27 @@ export default function App() {
   const [splashDone, setSplashDone] = useState(false);
 
   return (
-    <div className="bg-[#0A0A0F] min-h-screen">
+    <div className="bg-[#0A0A0F] min-h-screen relative z-0">
+      <div className="fixed inset-0 z-[-1]">
+        <LiquidEther
+          colors={[ '#5227FF', '#FF9FFC', '#B497CF' ]}
+          mouseForce={20}
+          cursorSize={100}
+          isViscous={false}
+          viscous={30}
+          iterationsViscous={32}
+          iterationsPoisson={32}
+          resolution={0.5}
+          isBounce={false}
+          autoDemo={true}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          takeoverDuration={0.25}
+          autoResumeDelay={3000}
+          autoRampDuration={0.6}
+        />
+      </div>
+
       <AnimatePresence>
         {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
       </AnimatePresence>

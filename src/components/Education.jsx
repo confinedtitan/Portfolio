@@ -37,7 +37,7 @@ export default function Education() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="education" ref={ref} className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+    <section id="education" ref={ref} className="py-24 relative overflow-hidden">
       <div className="absolute top-1/2 left-0 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

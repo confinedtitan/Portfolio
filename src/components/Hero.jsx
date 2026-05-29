@@ -15,7 +15,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0A0A0F]">
+    <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Animated Background Blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-blob" />

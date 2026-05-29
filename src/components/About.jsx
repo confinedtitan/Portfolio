@@ -14,7 +14,7 @@ export default function About() {
   const ref = useRef(null);
 
   return (
-    <section id="about" ref={ref} className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+    <section id="about" ref={ref} className="py-24 relative overflow-hidden">
       {/* Subtle background */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
 

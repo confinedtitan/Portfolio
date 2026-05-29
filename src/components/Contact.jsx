@@ -60,7 +60,7 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" ref={ref} className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+    <section id="contact" ref={ref} className="py-24 relative overflow-hidden">
       {/* Background grid */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"

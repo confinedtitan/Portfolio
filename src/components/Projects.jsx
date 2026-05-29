@@ -99,7 +99,7 @@ export default function Projects() {
     : projects.filter((p) => p.category === activeFilter);
 
   return (
-    <section id="projects" ref={ref} className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+    <section id="projects" ref={ref} className="py-24 relative overflow-hidden">
       <div className="absolute top-1/2 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

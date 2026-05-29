@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { staggerContainer, fadeIn, scaleIn } from '../utils/motion';
 import { useRef } from 'react';
 import Stack from './Stack';
-import photo1 from '../assets/photo1.jpeg';
-import photo2 from '../assets/photo2.JPG';
-import photo3 from '../assets/photo3.JPG';
-import photo4 from '../assets/photo4.JPG';
+import photo1 from '../assets/photo1.WebP';
+import photo2 from '../assets/photo2.WebP';
+import photo3 from '../assets/photo3.WebP';
+import photo4 from '../assets/photo4.WebP';
 
 const stackImages = [
   photo1,

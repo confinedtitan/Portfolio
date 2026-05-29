@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import Magnetic from './Magnetic';
 
 // Color config per project type
 const COLOR_MAP = {
@@ -123,18 +124,19 @@ export default function Projects() {
           className="flex flex-wrap items-center justify-center gap-3 mb-12"
         >
           {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => setActiveFilter(f)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeFilter === f
-                  ? 'bg-cyan-500 text-[#0A0A0F] shadow-lg'
-                  : 'glass-card text-[#94A3B8] hover:text-cyan-400 hover:border-cyan-500/30'
-              }`}
-              style={activeFilter === f ? { boxShadow: '0 0 20px rgba(6,182,212,0.4)' } : {}}
-            >
-              {f}
-            </button>
+            <Magnetic key={f} className="inline-flex">
+              <button
+                onClick={() => setActiveFilter(f)}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  activeFilter === f
+                    ? 'bg-cyan-500 text-[#0A0A0F] shadow-lg'
+                    : 'glass-card text-[#94A3B8] hover:text-cyan-400 hover:border-cyan-500/30'
+                }`}
+                style={activeFilter === f ? { boxShadow: '0 0 20px rgba(6,182,212,0.4)' } : {}}
+              >
+                {f}
+              </button>
+            </Magnetic>
           ))}
         </motion.div>
 
@@ -198,15 +200,17 @@ export default function Projects() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3 pt-4 border-t border-white/5">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-[#94A3B8] hover:text-cyan-400 transition-colors"
-                    >
-                      <FaGithub size={16} />
-                      GitHub
-                    </a>
+                    <Magnetic className="inline-flex">
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-[#94A3B8] hover:text-cyan-400 transition-colors"
+                      >
+                        <FaGithub size={16} />
+                        GitHub
+                      </a>
+                    </Magnetic>
                   </div>
                 </motion.div>
               );

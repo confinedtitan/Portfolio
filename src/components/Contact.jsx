@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { HiMail, HiPhone, HiLocationMarker, HiCheckCircle } from 'react-icons/hi';
+import Magnetic from './Magnetic';
 
 export default function Contact() {
   const ref = useRef(null);
@@ -106,26 +107,28 @@ export default function Contact() {
 
             <div className="space-y-5">
               {contactLinks.map(({ icon: Icon, label, value, href }) => (
-                <div key={label} className="flex items-center gap-4 group">
-                  <div className="w-11 h-11 glass-card rounded-xl flex items-center justify-center flex-shrink-0 group-hover:border-cyan-500/40 transition-colors">
-                    <Icon size={18} className="text-cyan-400" />
+                <Magnetic key={label} className="block w-max">
+                  <div className="flex items-center gap-4 group">
+                    <div className="w-11 h-11 glass-card rounded-xl flex items-center justify-center flex-shrink-0 group-hover:border-cyan-500/40 transition-colors">
+                      <Icon size={18} className="text-cyan-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-[#94A3B8] mb-0.5">{label}</p>
+                      {href ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#F1F5F9] text-sm hover:text-cyan-400 transition-colors truncate block max-w-xs"
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <p className="text-[#F1F5F9] text-sm">{value}</p>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-[#94A3B8] mb-0.5">{label}</p>
-                    {href ? (
-                      <a
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#F1F5F9] text-sm hover:text-cyan-400 transition-colors truncate block max-w-xs"
-                      >
-                        {value}
-                      </a>
-                    ) : (
-                      <p className="text-[#F1F5F9] text-sm">{value}</p>
-                    )}
-                  </div>
-                </div>
+                </Magnetic>
               ))}
             </div>
           </motion.div>
@@ -204,14 +207,16 @@ export default function Contact() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3.5 rounded-xl font-semibold text-[#0A0A0F] bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={{ boxShadow: '0 0 24px rgba(6,182,212,0.3)' }}
-                >
-                  {loading ? 'Sending...' : 'Send Message →'}
-                </button>
+                <Magnetic className="block w-full">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3.5 rounded-xl font-semibold text-[#0A0A0F] bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                    style={{ boxShadow: '0 0 24px rgba(6,182,212,0.3)' }}
+                  >
+                    {loading ? 'Sending...' : 'Send Message →'}
+                  </button>
+                </Magnetic>
               </form>
             </div>
           </motion.div>

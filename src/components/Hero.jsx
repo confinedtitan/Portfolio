@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { staggerContainer, fadeIn, scaleIn } from '../utils/motion';
 import { TypeAnimation } from 'react-type-animation';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import profileImg from '../assets/profile.jpg';
+import VariableProximity from './VariableProximity';
+import Magnetic from './Magnetic';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -10,6 +13,8 @@ const itemVariants = {
 };
 
 export default function Hero() {
+  const containerRef = useRef(null);
+  
   const scrollToSection = (id) => {
     document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -35,6 +40,7 @@ export default function Hero() {
         <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           {/* Left Column */}
           <motion.div
+            ref={containerRef}
             className="flex-1 text-center lg:text-left"
             variants={staggerContainer(0.15, 0.3)}
             initial="hidden"
@@ -49,10 +55,18 @@ export default function Hero() {
 
             <motion.h1
               variants={fadeIn('up')}
-              className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-4"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4"
+              style={{ color: 'hsl(0, 0%, 28%)' }}
             >
-              Hi, I'm Shamganesh{' '}
-              <span className="animate-pulse inline-block">👋</span>
+              <VariableProximity
+                label={"Hi, I'm Shamganesh"}
+                className={'variable-proximity-demo'}
+                fromFontVariationSettings="'wght' 400, 'opsz' 9"
+                toFontVariationSettings="'wght' 1000, 'opsz' 40"
+                containerRef={containerRef}
+                radius={100}
+                falloff='linear'
+              />
             </motion.h1>
 
             <motion.div variants={fadeIn('up')} className="text-2xl sm:text-3xl font-heading font-semibold mb-6 h-auto min-h-[4rem] sm:min-h-[3rem]">
@@ -87,42 +101,50 @@ export default function Hero() {
               variants={itemVariants}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
             >
-              <button
-                onClick={() => scrollToSection('#projects')}
-                className="btn-primary text-center"
-              >
-                View My Work
-              </button>
-              <button
-                onClick={() => scrollToSection('#contact')}
-                className="btn-outline text-center"
-              >
-                Let's Connect
-              </button>
+              <Magnetic className="inline-flex">
+                <button
+                  onClick={() => scrollToSection('#projects')}
+                  className="btn-primary text-center w-full sm:w-auto"
+                >
+                  View My Work
+                </button>
+              </Magnetic>
+              <Magnetic className="inline-flex">
+                <button
+                  onClick={() => scrollToSection('#contact')}
+                  className="btn-outline text-center w-full sm:w-auto"
+                >
+                  Let's Connect
+                </button>
+              </Magnetic>
             </motion.div>
 
             <motion.div
               variants={itemVariants}
               className="flex items-center gap-6 justify-center lg:justify-start"
             >
-              <a
-                href="https://github.com/confinedtitan"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#94A3B8] hover:text-cyan-400 transition-colors duration-200"
-                aria-label="GitHub"
-              >
-                <FaGithub size={26} />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/shamganesh-r-394969370"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#94A3B8] hover:text-cyan-400 transition-colors duration-200"
-                aria-label="LinkedIn"
-              >
-                <FaLinkedin size={26} />
-              </a>
+              <Magnetic className="inline-flex">
+                <a
+                  href="https://github.com/confinedtitan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#94A3B8] hover:text-cyan-400 transition-colors duration-200"
+                  aria-label="GitHub"
+                >
+                  <FaGithub size={26} />
+                </a>
+              </Magnetic>
+              <Magnetic className="inline-flex">
+                <a
+                  href="https://www.linkedin.com/in/shamganesh-r-394969370"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#94A3B8] hover:text-cyan-400 transition-colors duration-200"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedin size={26} />
+                </a>
+              </Magnetic>
             </motion.div>
           </motion.div>
 

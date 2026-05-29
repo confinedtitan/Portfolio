@@ -9,6 +9,10 @@
     scroll-behavior: smooth;
   }
 
+  * {
+    cursor: none !important;
+  }
+
   body {
     @apply bg-[#0A0A0F] text-[#F1F5F9] font-sans;
     overflow-x: hidden;
@@ -111,3 +115,4 @@
 .splash-out {
   animation: fadeOut 0.5s ease forwards;
 }
+

@@ -1,6 +1,8 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiArrowUp } from 'react-icons/hi';
+import MagneticCursor from './components/MagneticCursor';
+import CountUp from './components/CountUp';
 
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -35,10 +37,16 @@ function SplashScreen({ onDone }) {
         transition={{ duration: 0.5 }}
         className="text-center"
       >
-        <h1 className="font-heading text-7xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent mb-4">
-          RS
+        <h1 className="font-heading text-8xl md:text-9xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent mb-4 tracking-tighter">
+          <CountUp
+            from={0}
+            to={100}
+            direction="up"
+            duration={1.5}
+            className="count-up-text"
+          />%
         </h1>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 mt-4 opacity-50">
           <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: '0ms' }} />
           <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: '150ms' }} />
           <div className="w-2 h-2 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -82,6 +90,7 @@ export default function App() {
 
   return (
     <div className="bg-[#0A0A0F] min-h-screen relative z-0">
+      <MagneticCursor />
       <div className="fixed inset-0 z-[-1]">
         <LiquidEther
           colors={[ '#5227FF', '#FF9FFC', '#B497CF' ]}

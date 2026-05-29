@@ -1,5 +1,6 @@
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { HiHeart } from 'react-icons/hi';
+import Magnetic from './Magnetic';
 
 export default function Footer() {
   return (
@@ -13,24 +14,28 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="flex items-center gap-5">
-            <a
-              href="https://github.com/confinedtitan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#94A3B8] hover:text-cyan-400 transition-colors"
-              aria-label="GitHub"
-            >
-              <FaGithub size={20} />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/shamganesh-r-394969370"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#94A3B8] hover:text-cyan-400 transition-colors"
-              aria-label="LinkedIn"
-            >
-              <FaLinkedin size={20} />
-            </a>
+            <Magnetic className="inline-flex">
+              <a
+                href="https://github.com/confinedtitan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#94A3B8] hover:text-cyan-400 transition-colors"
+                aria-label="GitHub"
+              >
+                <FaGithub size={20} />
+              </a>
+            </Magnetic>
+            <Magnetic className="inline-flex">
+              <a
+                href="https://www.linkedin.com/in/shamganesh-r-394969370"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#94A3B8] hover:text-cyan-400 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin size={20} />
+              </a>
+            </Magnetic>
           </div>
 
           {/* Credit Line */}

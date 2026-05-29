@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiMenu, HiX } from 'react-icons/hi';
+import Magnetic from './Magnetic';
 
 const navLinks = [
   { label: 'About', href: '#about' },
@@ -40,38 +41,43 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <motion.a
-            href="#"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="font-heading text-2xl font-bold gradient-text cursor-pointer select-none"
-            whileHover={{ scale: 1.05 }}
-          >
-            RS
-          </motion.a>
+          <Magnetic className="inline-flex">
+            <motion.a
+              href="#"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="font-heading text-2xl font-bold gradient-text cursor-pointer select-none"
+              whileHover={{ scale: 1.05 }}
+            >
+              RS
+            </motion.a>
+          </Magnetic>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <button
-                key={link.label}
-                onClick={() => handleNavClick(link.href)}
-                className="text-[#94A3B8] hover:text-cyan-400 transition-colors duration-200 text-sm font-medium tracking-wide"
-              >
-                {link.label}
-              </button>
+              <Magnetic key={link.label} className="inline-flex">
+                <button
+                  onClick={() => handleNavClick(link.href)}
+                  className="text-[#94A3B8] hover:text-cyan-400 transition-colors duration-200 text-sm font-medium tracking-wide"
+                >
+                  {link.label}
+                </button>
+              </Magnetic>
             ))}
           </div>
 
           {/* Resume Button */}
           <div className="hidden md:flex items-center gap-4">
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-[#0A0A0F] font-semibold px-5 py-2 rounded-xl text-sm transition-all duration-300"
-            >
-              Resume
-            </a>
+            <Magnetic className="inline-flex">
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-[#0A0A0F] font-semibold px-5 py-2 rounded-xl text-sm transition-all duration-300"
+              >
+                Resume
+              </a>
+            </Magnetic>
           </div>
 
           {/* Mobile Hamburger */}

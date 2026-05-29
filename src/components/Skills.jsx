@@ -5,7 +5,7 @@ const skillGroups = [
   {
     icon: '💻',
     title: 'Languages',
-    skills: ['Java'],
+    skills: ['Java','Python'],
   },
   {
     icon: '⚛️',

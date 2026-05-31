@@ -20,13 +20,13 @@ export default function Leadership() {
           className="text-center mb-16"
         >
           <p className="text-cyan-400 font-medium tracking-widest text-sm uppercase mb-3">Leadership</p>
-          <h2 className="section-heading">Leadership & Responsibility</h2>
+          <h2 className="section-heading glitch-hover" data-text="Leadership & Responsibility">Leadership & Responsibility</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 mx-auto mt-4 rounded-full" />
         </motion.div>
 
         {/* Leadership Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.2 }}
           className="glass-card p-8 flex flex-col sm:flex-row gap-8 items-center sm:items-start hover:border-white/20 transition-all duration-300"
@@ -69,7 +69,7 @@ export default function Leadership() {
               <span className="bg-white/10 text-[#94A3B8] rounded-full px-3 py-1 text-sm font-medium">Student Leadership</span>
             </div>
           </div>
-        </motion.div>
+          </motion.div>
       </div>
     </section>
   );

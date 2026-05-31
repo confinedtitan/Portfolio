@@ -39,17 +39,17 @@ export default function About() {
           className="text-center mb-16"
         >
           <p className="text-cyan-400 font-medium tracking-widest text-sm uppercase mb-3">Who I Am</p>
-          <h2 className="section-heading">About Me</h2>
+          <h2 className="section-heading glitch-hover" data-text="About Me">About Me</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 mx-auto mt-4 rounded-full" />
         </motion.div>
 
-        <motion.div
-          variants={staggerContainer(0.2, 0.2)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"
-        >
+          <motion.div
+            variants={staggerContainer(0.2, 0.2)}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+          >
           {/* Left — Profile Image Stack */}
           <motion.div
             variants={fadeIn('right', 0.3)}

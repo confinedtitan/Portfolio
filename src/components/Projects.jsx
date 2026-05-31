@@ -112,7 +112,7 @@ export default function Projects() {
           className="text-center mb-12"
         >
           <p className="text-cyan-400 font-medium tracking-widest text-sm uppercase mb-3">What I've Built</p>
-          <h2 className="section-heading">Projects</h2>
+          <h2 className="section-heading glitch-hover" data-text="Projects">Projects</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 mx-auto mt-4 rounded-full" />
         </motion.div>
 
@@ -152,14 +152,16 @@ export default function Projects() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  whileHover={{ y: -4 }}
-                  className="glass-card p-6 group cursor-default transition-all duration-300"
-                  style={{ borderTop: `2px solid ${c.border}` }}
-                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 20px 60px ${c.glow}`; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = ''; }}
+                  className="h-full"
                 >
-                  {/* Badge + Title */}
-                  <div className="mb-4">
+                    <div
+                      className="glass-card p-6 group cursor-default transition-all duration-300 h-full flex flex-col"
+                      style={{ borderTop: `2px solid ${c.border}` }}
+                      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 20px 60px ${c.glow}`; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = ''; }}
+                    >
+                      {/* Badge + Title */}
+                      <div className="mb-4">
                     <div className="flex flex-wrap gap-2 mb-3">
                       <span className={`text-xs font-medium tracking-wider uppercase px-2.5 py-1 rounded-full ${c.badge}`}>
                         {project.badge}
@@ -212,6 +214,7 @@ export default function Projects() {
                       </a>
                     </Magnetic>
                   </div>
+                    </div>
                 </motion.div>
               );
             })}

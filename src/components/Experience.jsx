@@ -48,7 +48,7 @@ export default function Experience() {
           className="text-center mb-16"
         >
           <p className="text-cyan-400 font-medium tracking-widest text-sm uppercase mb-3">Where I've Worked</p>
-          <h2 className="section-heading">Experience</h2>
+          <h2 className="section-heading glitch-hover" data-text="Experience">Experience</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 mx-auto mt-4 rounded-full" />
         </motion.div>
 

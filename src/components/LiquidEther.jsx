@@ -21,7 +21,8 @@ export default function LiquidEther({
   autoIntensity = 2.2,
   takeoverDuration = 0.25,
   autoResumeDelay = 1000,
-  autoRampDuration = 0.6
+  autoRampDuration = 0.6,
+  onReady = null,
 }) {
   const mountRef = useRef(null);
   const webglRef = useRef(null);
@@ -974,6 +975,11 @@ export default function LiquidEther({
         if (!this.running) return; // safety
         this.render();
         rafRef.current = requestAnimationFrame(this._loop);
+        // Signal readiness after the very first rendered frame
+        if (this._onReadyCalled === false && typeof this._onReady === 'function') {
+          this._onReadyCalled = true;
+          this._onReady();
+        }
       }
       start() {
         if (this.running) return;
@@ -1017,6 +1023,9 @@ export default function LiquidEther({
       autoResumeDelay,
       autoRampDuration
     });
+    // Wire up onReady callback to fire after first rendered frame
+    webgl._onReady = typeof onReady === 'function' ? onReady : null;
+    webgl._onReadyCalled = false;
     webglRef.current = webgl;
 
     const applyOptionsFromProps = () => {
@@ -1094,6 +1103,7 @@ export default function LiquidEther({
       }
       webglRef.current = null;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     BFECC,
     cursorSize,
@@ -1105,7 +1115,10 @@ export default function LiquidEther({
     mouseForce,
     resolution,
     viscous,
-    colors,
+    // Serialize colors to a string so a new array literal with same values
+    // doesn't trigger a full WebGL teardown/reinit on every parent render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(colors),
     autoDemo,
     autoSpeed,
     autoIntensity,

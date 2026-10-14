@@ -2,17 +2,35 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="R Shamganesh – Full Stack Developer & AI Enthusiast. I build scalable platforms, privacy-first AI systems, and end-to-end products that ship." />
+    <meta name="description" content="R Shamganesh – Full Stack Developer &amp; AI Enthusiast. I build scalable platforms, privacy-first AI systems, and end-to-end products that ship." />
     <meta name="keywords" content="R Shamganesh, Full Stack Developer, AI Enthusiast, React, Django, Next.js, Portfolio" />
     <meta name="author" content="R Shamganesh" />
     <meta property="og:title" content="R Shamganesh – Full Stack Developer" />
     <meta property="og:description" content="I build scalable platforms, privacy-first AI systems, and end-to-end products that ship." />
     <meta property="og:type" content="website" />
+    <!-- DNS prefetch & preconnect for Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <title>R Shamganesh – Full Stack Developer & AI Enthusiast</title>
+    <!-- Preload the font stylesheet to eliminate render-blocking FOUT -->
+    <link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      onload="this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap">
+    </noscript>
+    <title>R Shamganesh – Full Stack Developer &amp; AI Enthusiast</title>
+    <!-- Inline critical CSS: prevent flash of white background before React hydrates -->
+    <style>
+      html, body, #root {
+        background-color: #0A0A0F;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

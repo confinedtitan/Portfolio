@@ -1,66 +1,79 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
+/**
+ * MagneticCursor — fully ref-based, zero React state updates on mouse move.
+ * Position is applied directly via style mutation inside a rAF loop,
+ * avoiding per-frame React re-renders entirely.
+ */
 export default function MagneticCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
-  const [isHovered, setIsHovered] = useState(false);
+  const cursorRef = useRef(null);
+  // Raw target position (updated by event listener, never triggers render)
+  const targetRef = useRef({ x: -200, y: -200 });
+  // Smoothed position (lerped in the rAF loop)
+  const currentRef = useRef({ x: -200, y: -200 });
+  const hoveredRef = useRef(false);
+  const rafRef = useRef(null);
 
   useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const el = cursorRef.current;
+    if (!el) return;
+
+    const LERP = 0.18; // smoothing factor (0 = no movement, 1 = instant)
+
+    const onMouseMove = (e) => {
+      targetRef.current.x = e.clientX;
+      targetRef.current.y = e.clientY;
     };
 
-    const handleMouseOver = (e) => {
-      // Check if hovering over interactive elements
-      if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.magnetic-target')) {
-        setIsHovered(true);
-      } else {
-        setIsHovered(false);
-      }
+    const onMouseOver = (e) => {
+      const isInteractive =
+        e.target.closest('a') ||
+        e.target.closest('button') ||
+        e.target.closest('.magnetic-target');
+      hoveredRef.current = !!isInteractive;
     };
 
-    window.addEventListener('mousemove', updateMousePosition);
-    window.addEventListener('mouseover', handleMouseOver);
+    const loop = () => {
+      const tx = targetRef.current.x;
+      const ty = targetRef.current.y;
+      const cx = currentRef.current.x + (tx - currentRef.current.x) * LERP;
+      const cy = currentRef.current.y + (ty - currentRef.current.y) * LERP;
+      currentRef.current.x = cx;
+      currentRef.current.y = cy;
+
+      const hovered = hoveredRef.current;
+      const size = hovered ? 64 : 24;
+      const offset = size / 2;
+
+      el.style.transform = `translate3d(${cx - offset}px, ${cy - offset}px, 0)`;
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+
+      rafRef.current = requestAnimationFrame(loop);
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('mouseover', onMouseOver, { passive: true });
+    rafRef.current = requestAnimationFrame(loop);
 
     return () => {
-      window.removeEventListener('mousemove', updateMousePosition);
-      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseover', onMouseOver);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  const variants = {
-    default: {
-      x: mousePosition.x - 12,
-      y: mousePosition.y - 12,
-      width: 24,
-      height: 24,
-      backgroundColor: 'rgba(255, 255, 255, 1)',
-      mixBlendMode: 'exclusion'
-    },
-    hover: {
-      x: mousePosition.x - 32,
-      y: mousePosition.y - 32,
-      width: 64,
-      height: 64,
-      backgroundColor: 'rgba(255, 255, 255, 1)',
-      mixBlendMode: 'exclusion',
-      scale: 1.1
-    }
-  };
-
   return (
-    <motion.div
-      className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999]"
-      variants={variants}
-      animate={isHovered ? "hover" : "default"}
-      transition={{ 
-        type: "spring", 
-        stiffness: 300, 
-        damping: 28, 
-        mass: 0.5 
-      }}
+    <div
+      ref={cursorRef}
+      className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999] will-change-transform"
       style={{
-        transform: "translate3d(0,0,0)",
+        width: 24,
+        height: 24,
+        backgroundColor: 'rgba(255,255,255,1)',
+        mixBlendMode: 'exclusion',
+        transform: 'translate3d(-200px,-200px,0)',
+        transition: 'width 0.15s ease, height 0.15s ease',
       }}
     />
   );

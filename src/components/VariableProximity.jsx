@@ -1,19 +1,26 @@
-import { forwardRef, useMemo, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { forwardRef, useMemo, useRef, useEffect, useCallback } from 'react';
 import './VariableProximity.css';
 
+// rAF loop that only runs while the component is mounted
 function useAnimationFrame(callback) {
+  // Keep callback stable via ref so the loop doesn't restart on re-renders
+  const callbackRef = useRef(callback);
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
+
   useEffect(() => {
     let frameId;
     const loop = () => {
-      callback();
+      callbackRef.current();
       frameId = requestAnimationFrame(loop);
     };
     frameId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frameId);
-  }, [callback]);
+  }, []); // ← empty deps: loop created once, callback updated via ref
 }
 
+// Tracks mouse position in a ref — no state, no re-renders
 function useMousePositionRef(containerRef) {
   const positionRef = useRef({ x: 0, y: 0 });
 
@@ -33,8 +40,8 @@ function useMousePositionRef(containerRef) {
       updatePosition(touch.clientX, touch.clientY);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchmove', handleTouchMove);
@@ -59,7 +66,8 @@ const VariableProximity = forwardRef((props, ref) => {
   } = props;
 
   const letterRefs = useRef([]);
-  const interpolatedSettingsRef = useRef([]);
+  // Cache letter bounding rects — recalculated only on resize, not per frame
+  const letterRectsRef = useRef([]);
   const mousePositionRef = useMousePositionRef(containerRef);
   const lastPositionRef = useRef({ x: null, y: null });
 
@@ -85,43 +93,64 @@ const VariableProximity = forwardRef((props, ref) => {
     }));
   }, [fromFontVariationSettings, toFontVariationSettings]);
 
-  const calculateDistance = (x1, y1, x2, y2) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-
-  const calculateFalloff = distance => {
-    const norm = Math.min(Math.max(1 - distance / radius, 0), 1);
-    switch (falloff) {
-      case 'exponential':
-        return norm ** 2;
-      case 'gaussian':
-        return Math.exp(-((distance / (radius / 2)) ** 2) / 2);
-      case 'linear':
-      default:
-        return norm;
-    }
-  };
-
-  useAnimationFrame(() => {
+  // Refresh cached letter rects on mount and on resize
+  const refreshLetterRects = useCallback(() => {
     if (!containerRef?.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
+    letterRectsRef.current = letterRefs.current.map(el => {
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return {
+        cx: r.left + r.width / 2 - containerRect.left,
+        cy: r.top + r.height / 2 - containerRect.top
+      };
+    });
+  }, [containerRef]);
+
+  useEffect(() => {
+    // Initial cache population (after a short delay to let layout settle)
+    const t = setTimeout(refreshLetterRects, 100);
+    const ro = new ResizeObserver(refreshLetterRects);
+    if (containerRef?.current) ro.observe(containerRef.current);
+    window.addEventListener('resize', refreshLetterRects, { passive: true });
+    // Scroll changes getBoundingClientRect values — refresh on scroll so
+    // distance calculations stay accurate as the page is scrolled.
+    window.addEventListener('scroll', refreshLetterRects, { passive: true });
+    return () => {
+      clearTimeout(t);
+      ro.disconnect();
+      window.removeEventListener('resize', refreshLetterRects);
+      window.removeEventListener('scroll', refreshLetterRects);
+    };
+  }, [containerRef, refreshLetterRects]);
+
+  const calculateFalloff = useCallback(
+    (distance) => {
+      const norm = Math.min(Math.max(1 - distance / radius, 0), 1);
+      switch (falloff) {
+        case 'exponential': return norm ** 2;
+        case 'gaussian': return Math.exp(-((distance / (radius / 2)) ** 2) / 2);
+        case 'linear':
+        default: return norm;
+      }
+    },
+    [radius, falloff]
+  );
+
+  useAnimationFrame(() => {
     const { x, y } = mousePositionRef.current;
-    if (lastPositionRef.current.x === x && lastPositionRef.current.y === y) {
-      return;
-    }
+    // Skip if mouse hasn't moved
+    if (lastPositionRef.current.x === x && lastPositionRef.current.y === y) return;
     lastPositionRef.current = { x, y };
 
     letterRefs.current.forEach((letterRef, index) => {
       if (!letterRef) return;
+      const cached = letterRectsRef.current[index];
+      if (!cached) return;
 
-      const rect = letterRef.getBoundingClientRect();
-      const letterCenterX = rect.left + rect.width / 2 - containerRect.left;
-      const letterCenterY = rect.top + rect.height / 2 - containerRect.top;
-
-      const distance = calculateDistance(
-        mousePositionRef.current.x,
-        mousePositionRef.current.y,
-        letterCenterX,
-        letterCenterY
-      );
+      const dx = x - cached.cx;
+      const dy = y - cached.cy;
+      const distance = Math.sqrt(dx * dx + dy * dy);
 
       if (distance >= radius) {
         letterRef.style.fontVariationSettings = fromFontVariationSettings;
@@ -136,7 +165,6 @@ const VariableProximity = forwardRef((props, ref) => {
         })
         .join(', ');
 
-      interpolatedSettingsRef.current[index] = newSettings;
       letterRef.style.fontVariationSettings = newSettings;
     });
   });
@@ -157,19 +185,19 @@ const VariableProximity = forwardRef((props, ref) => {
           {word.split('').map(letter => {
             const currentLetterIndex = letterIndex++;
             return (
-              <motion.span
+              <span
                 key={currentLetterIndex}
                 ref={el => {
                   letterRefs.current[currentLetterIndex] = el;
                 }}
                 style={{
                   display: 'inline-block',
-                  fontVariationSettings: interpolatedSettingsRef.current[currentLetterIndex]
+                  fontVariationSettings: fromFontVariationSettings
                 }}
                 aria-hidden="true"
               >
                 {letter}
-              </motion.span>
+              </span>
             );
           })}
           {wordIndex < words.length - 1 && <span style={{ display: 'inline-block' }}>&nbsp;</span>}

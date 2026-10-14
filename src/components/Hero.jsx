@@ -163,7 +163,9 @@ export default function Hero() {
                 <img
                   src={profileImg}
                   alt="R Shamganesh"
-                  loading="lazy"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </div>

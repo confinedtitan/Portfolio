@@ -9,6 +9,17 @@
     scroll-behavior: smooth;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   * {
     cursor: none !important;
   }
@@ -21,6 +32,19 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Syne', sans-serif;
   }
+
+  /* Promote the WebGL background canvas to its own compositor layer */
+  .liquid-ether-container canvas,
+  .liquid-ether-container {
+    will-change: transform;
+  }
+
+  /* Let the browser skip rendering off-screen sections */
+  /* NOTE: content-visibility: auto is intentionally NOT used here because it
+     breaks position:sticky elements, causes layout reflows on scroll, and
+     produces jank with animated components entering the viewport.
+     The WebGL canvas gets its own compositor layer via will-change below. */
+
 
   /* Custom Scrollbar */
   ::-webkit-scrollbar {

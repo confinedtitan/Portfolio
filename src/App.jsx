@@ -30,18 +30,29 @@ const preloadModules = () => {
 
 // ─── SplashScreen ────────────────────────────────────────────────────────────
 /**
- * Props:
- *  progress  – number 0–100 (the real loading progress driven by App)
- *  onDone    – called once progress reaches 100 and the exit transition ends
+ * SplashScreen — covers the viewport with a loading counter.
+ *
+ * `visible` is derived directly from the `progress` prop (progress < 100).
+ * On the initial render, `useLoadingProgress` always starts at 0, so the
+ * splash is guaranteed to mount as a child of AnimatePresence before any
+ * milestones complete — even if React 19 batches them into one tick.
+ *
+ * When progress reaches 100, the child is removed and AnimatePresence runs
+ * the exit animation. `onDone` fires via onExitComplete (primary path) or
+ * a 700 ms fallback timeout (in case Framer Motion's callback is skipped).
  */
 function SplashScreen({ progress, onDone }) {
   const digitRef = useRef(null);
-  // Drive the displayed number directly via DOM mutation (no re-renders per tick)
   const displayedRef = useRef(0);
   const rafRef = useRef(null);
   const doneFiredRef = useRef(false);
 
-  // Animate the digit counter toward `progress` using RAF + lerp
+  // Visibility is derived directly from the progress prop.
+  // AnimatePresence handles the exit animation when `visible` flips to false.
+  const visible = progress < 100;
+
+  // Animate the digit counter toward `progress` using RAF + lerp.
+  // Runs on every progress change; DOM is mutated directly — no re-renders.
   useEffect(() => {
     const animate = () => {
       const current = displayedRef.current;
@@ -60,7 +71,7 @@ function SplashScreen({ progress, onDone }) {
         rafRef.current = requestAnimationFrame(animate);
       } else {
         displayedRef.current = progress;
-        if (digitRef.current) digitRef.current.textContent = Math.floor(progress);
+        if (digitRef.current) digitRef.current.textContent = progress;
       }
     };
 
@@ -69,29 +80,29 @@ function SplashScreen({ progress, onDone }) {
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [progress]);
 
-  // Primary path: framer-motion exit animation completes → call onDone
+  // Primary: called by AnimatePresence after exit animation completes.
   const handleExitComplete = useCallback(() => {
     if (doneFiredRef.current) return;
     doneFiredRef.current = true;
     onDone();
   }, [onDone]);
 
-  // Fallback: if onExitComplete never fires (e.g. reduced-motion, FM quirk),
-  // reveal the site after the exit animation duration + a small buffer.
+  // Fallback: in case onExitComplete never fires (reduced-motion, FM quirk).
+  // Fires 700 ms after progress reaches 100 (550ms exit + 150ms buffer).
   useEffect(() => {
     if (progress < 100) return;
-    const timer = setTimeout(() => {
+    const t = setTimeout(() => {
       if (!doneFiredRef.current) {
         doneFiredRef.current = true;
         onDone();
       }
-    }, 700); // 550ms exit + 150ms buffer
-    return () => clearTimeout(timer);
+    }, 700);
+    return () => clearTimeout(t);
   }, [progress, onDone]);
 
   return (
     <AnimatePresence onExitComplete={handleExitComplete}>
-      {progress < 100 && (
+      {visible && (
         <motion.div
           key="splash"
           className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0A0A0F]"

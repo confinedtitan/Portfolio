@@ -134,20 +134,39 @@ export default function LiquidEther({
         this.takeoverFrom = new THREE.Vector2();
         this.takeoverTo = new THREE.Vector2();
         this.onInteract = null;
+        // Cached container rect — updated on resize, NOT per mouse-move.
+        this.cachedRect = { left: 0, top: 0, width: 0, height: 0, right: 0, bottom: 0 };
+        this._rectRafId = null;
+        this._onResize = this._refreshRect.bind(this);
         this._onMouseMove = this.onDocumentMouseMove.bind(this);
         this._onTouchStart = this.onDocumentTouchStart.bind(this);
         this._onTouchMove = this.onDocumentTouchMove.bind(this);
         this._onTouchEnd = this.onTouchEnd.bind(this);
         this._onDocumentLeave = this.onDocumentLeave.bind(this);
       }
+      _refreshRect() {
+        // Debounce via rAF so rapid resize events don't spam getBoundingClientRect.
+        if (this._rectRafId) return;
+        this._rectRafId = requestAnimationFrame(() => {
+          this._rectRafId = null;
+          if (!this.container) return;
+          const r = this.container.getBoundingClientRect();
+          this.cachedRect = { left: r.left, top: r.top, width: r.width, height: r.height, right: r.right, bottom: r.bottom };
+        });
+      }
       init(container) {
         this.container = container;
+        // Initial rect cache — one getBoundingClientRect on mount, then only on resize.
+        const r = container.getBoundingClientRect();
+        this.cachedRect = { left: r.left, top: r.top, width: r.width, height: r.height, right: r.right, bottom: r.bottom };
+        window.addEventListener('resize', this._onResize, { passive: true });
         this.docTarget = container.ownerDocument || null;
         const defaultView =
           (this.docTarget && this.docTarget.defaultView) || (typeof window !== 'undefined' ? window : null);
         if (!defaultView) return;
         this.listenerTarget = defaultView;
-        this.listenerTarget.addEventListener('mousemove', this._onMouseMove);
+        // passive: true — allows browser scroll compositor to run without waiting for this handler.
+        this.listenerTarget.addEventListener('mousemove', this._onMouseMove, { passive: true });
         this.listenerTarget.addEventListener('touchstart', this._onTouchStart, { passive: true });
         this.listenerTarget.addEventListener('touchmove', this._onTouchMove, { passive: true });
         this.listenerTarget.addEventListener('touchend', this._onTouchEnd);
@@ -156,6 +175,8 @@ export default function LiquidEther({
         }
       }
       dispose() {
+        if (this._rectRafId) { cancelAnimationFrame(this._rectRafId); this._rectRafId = null; }
+        window.removeEventListener('resize', this._onResize);
         if (this.listenerTarget) {
           this.listenerTarget.removeEventListener('mousemove', this._onMouseMove);
           this.listenerTarget.removeEventListener('touchstart', this._onTouchStart);
@@ -170,8 +191,8 @@ export default function LiquidEther({
         this.container = null;
       }
       isPointInside(clientX, clientY) {
-        if (!this.container) return false;
-        const rect = this.container.getBoundingClientRect();
+        // Uses cached rect — no layout reflow.
+        const rect = this.cachedRect;
         if (rect.width === 0 || rect.height === 0) return false;
         return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
       }
@@ -182,7 +203,8 @@ export default function LiquidEther({
       setCoords(x, y) {
         if (!this.container) return;
         if (this.timer) window.clearTimeout(this.timer);
-        const rect = this.container.getBoundingClientRect();
+        // Uses cached rect — no layout reflow per mouse-move.
+        const rect = this.cachedRect;
         if (rect.width === 0 || rect.height === 0) return;
         const nx = (x - rect.left) / rect.width;
         const ny = (y - rect.top) / rect.height;
@@ -200,8 +222,8 @@ export default function LiquidEther({
         if (!this.updateHoverState(event.clientX, event.clientY)) return;
         if (this.onInteract) this.onInteract();
         if (this.isAutoActive && !this.hasUserControl && !this.takeoverActive) {
-          if (!this.container) return;
-          const rect = this.container.getBoundingClientRect();
+          // Uses cached rect — no layout reflow.
+          const rect = this.cachedRect;
           if (rect.width === 0 || rect.height === 0) return;
           const nx = (event.clientX - rect.left) / rect.width;
           const ny = (event.clientY - rect.top) / rect.height;
@@ -1004,9 +1026,7 @@ export default function LiquidEther({
             Common.renderer.dispose();
             Common.renderer.forceContextLoss();
           }
-        } catch (e) {
-          void 0;
-        }
+        } catch { void 0; }
       }
     }
 
@@ -1087,16 +1107,12 @@ export default function LiquidEther({
       if (resizeObserverRef.current) {
         try {
           resizeObserverRef.current.disconnect();
-        } catch (e) {
-          void 0;
-        }
+        } catch { void 0; }
       }
       if (intersectionObserverRef.current) {
         try {
           intersectionObserverRef.current.disconnect();
-        } catch (e) {
-          void 0;
-        }
+        } catch { void 0; }
       }
       if (webglRef.current) {
         webglRef.current.dispose();
